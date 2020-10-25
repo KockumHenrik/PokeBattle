@@ -1,0 +1,3 @@
+name:punch
+power:10
+pp:10

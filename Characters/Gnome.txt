@@ -1,0 +1,4 @@
+name:Gnome
+HP:10
+ATK:30
+DEF:5

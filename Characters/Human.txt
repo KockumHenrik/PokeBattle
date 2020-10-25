@@ -1,0 +1,4 @@
+name:Human
+HP:30
+ATK:5
+DEF:20
