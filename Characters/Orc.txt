@@ -2,3 +2,4 @@ name:Orc
 HP:30
 ATK:10
 DEF:10
+SPD:10

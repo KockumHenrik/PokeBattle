@@ -5,12 +5,14 @@ public class classCharacter {
 	public int HP;
 	public int ATK;
 	public int DEF;
+	public int SPD;
 	
-	public classCharacter(String name, int HP, int ATK, int DEF) {
+	public classCharacter(String name, int HP, int ATK, int DEF, int SPD) {
 		this.name = name;
 		this.HP = HP;
 		this.ATK = ATK;
 		this.DEF = DEF;
+		this.SPD = SPD;
 	}
 	
 	public String getName() {
@@ -25,4 +27,7 @@ public class classCharacter {
 	public int getHP() {
 		return HP;
 	}	
+	public int getSPD() {
+		return SPD;
+	}
 }

@@ -10,4 +10,14 @@ public class Move {
 		this.power = power;
 		this.pp = pp;
 	}
+	
+	public String getName() {
+		return name;
+	}
+	public int getPower() {
+		return power;
+	}
+	public int getPp() {
+		return pp;
+	}
 }

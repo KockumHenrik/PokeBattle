@@ -25,50 +25,71 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 
+import Objects.FullCharacter;
 import Objects.classCharacter;
 
 public class CharacterSelection {
 	
 	public ArrayList<classCharacter> characterList = new ArrayList<>();
+	public ArrayList<FullCharacter> partyList = new ArrayList<>();
+	public ArrayList<String> nameOfMembersInParty = new ArrayList<>();
+	public JList party;
+	public JList list;
+	public boolean first = true;
+	public String[] names;
 	
 	public void characterSelect() {
-		setupCharacters();
+		if(first) {
+			setupCharacters();
+		}
 		
 		//Big boxes
-		JFrame parent = new JFrame();
+		JFrame parent = new JFrame("Build Party");
 		
 		//Buttons
 		JButton selectButton = new JButton("Select Moves");
-		JButton showButton = new JButton("Show");
+		JButton showButton = new JButton("Show Stats");
 		
 		//Labels
 		JLabel characterLabel = new JLabel("Characters");
+		JLabel partyLabel = new JLabel("Party");
 		JLabel HpLabel = new JLabel("HP");
 		JLabel AtkLabel = new JLabel("ATK");
 		JLabel DefLabel = new JLabel("DEF");
+		JLabel SpdLabel = new JLabel("SPD");
 		
-		//TextArea and Scroll
-		String[] names = new String[characterList.size()];
-		for(int j = 0; j < characterList.size(); j++) {
-			names[j] = characterList.get(j).getName();
-		}
-		JList list = new JList(names);
-		JTextArea characterTextArea = new JTextArea();
-		characterTextArea.setEditable(false);
+		//Fill list with character names
+		if(first) {
+			names = new String[characterList.size()];
+			for(int j = 0; j < characterList.size(); j++) {
+				names[j] = characterList.get(j).getName();
+			}			
+		}		
+		list = new JList(names);
+		list.setSelectedIndex(0);
+		party = new JList(nameOfMembersInParty.toArray());
+		
+		//Scroll, List and Text areas
 		JScrollPane scrollPane = new JScrollPane(list);
+		JScrollPane partyPane = new JScrollPane(party);
 		JTextArea HpTextArea = new JTextArea();
 		JTextArea AtkTextArea = new JTextArea();
 		JTextArea DefTextArea = new JTextArea();
+		JTextArea SpdTextArea = new JTextArea();
 		
 		//Add
 		parent.add(characterLabel);
 		parent.add(scrollPane);
+		parent.add(partyLabel);
+		parent.add(partyPane);
 		parent.add(HpLabel);
 		parent.add(HpTextArea);
 		parent.add(AtkLabel);
 		parent.add(AtkTextArea);
 		parent.add(DefLabel);
 		parent.add(DefTextArea);
+		parent.add(SpdLabel);
+		parent.add(SpdTextArea);
 		parent.add(showButton);
 		parent.add(selectButton);
 		
@@ -76,41 +97,34 @@ public class CharacterSelection {
 		parent.setLayout(null);		
 		
 		//Set some sizes?
-		scrollPane.setPreferredSize(new Dimension(280,700));
-		selectButton.setPreferredSize(new Dimension(300,100));
-		showButton.setPreferredSize(new Dimension(300,100));
-		
-		
+		scrollPane.setPreferredSize(new Dimension(280,450));
+		partyPane.setPreferredSize(new Dimension(280,200));
+		selectButton.setPreferredSize(new Dimension(150,60));
+		showButton.setPreferredSize(new Dimension(150,60));
+			
 		//Set size and position?
 		Insets insets = parent.getInsets();
 		parent.setSize(insets.left + insets.right + 600, insets.top + insets.bottom + 1000);
 		characterLabel.setBounds(10 + insets.left, 35 + insets.top, 100, 10);
-		scrollPane.setBounds(10 + insets.left, 60 + insets.top, scrollPane.getPreferredSize().width, scrollPane.getPreferredSize().height);
-		
-		HpLabel.setBounds(370 + insets.left, 100 + insets.top, 100, 10);
-		HpTextArea.setBounds(370 + insets.left, 115 + insets.top, 150, 30);
-		
-		AtkLabel.setBounds(370 + insets.left, 200 + insets.top, 100, 10);
-		AtkTextArea.setBounds(370 + insets.left, 215 + insets.top, 150, 30);
-		
-		DefLabel.setBounds(370 + insets.left, 300 + insets.top, 100, 10);
-		DefTextArea.setBounds(370 + insets.left, 315 + insets.top, 150, 30);
-		
-		showButton.setBounds(insets.left, 790 + insets.top, showButton.getPreferredSize().width, showButton.getPreferredSize().height);
-		selectButton.setBounds(300 + insets.left, 790 + insets.top, selectButton.getPreferredSize().width, selectButton.getPreferredSize().height);
+		scrollPane.setBounds(10 + insets.left, 60 + insets.top, scrollPane.getPreferredSize().width, scrollPane.getPreferredSize().height);		
+		partyLabel.setBounds(10 + insets.left, 660 + insets.top, 100, 20);
+		partyPane.setBounds(10 + insets.left, 680 + insets.top, partyPane.getPreferredSize().width, partyPane.getPreferredSize().height);		
+		HpLabel.setBounds(370 + insets.left, 140 + insets.top, 100, 10);
+		HpTextArea.setBounds(370 + insets.left, 155 + insets.top, 150, 30);		
+		AtkLabel.setBounds(370 + insets.left, 240 + insets.top, 100, 10);
+		AtkTextArea.setBounds(370 + insets.left, 255 + insets.top, 150, 30);		
+		DefLabel.setBounds(370 + insets.left, 340 + insets.top, 100, 10);
+		DefTextArea.setBounds(370 + insets.left, 355 + insets.top, 150, 30);	
+		SpdLabel.setBounds(370 + insets.left, 440 + insets.top, 100, 10);
+		SpdTextArea.setBounds(370 + insets.left, 455 + insets.top, 150, 30);	
+		showButton.setBounds(370 + insets.left, 60 + insets.top, showButton.getPreferredSize().width, showButton.getPreferredSize().height);
+		selectButton.setBounds(10 + insets.left, 525 + insets.top, selectButton.getPreferredSize().width, selectButton.getPreferredSize().height);
 		
 		//Other
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		parent.setLocationRelativeTo(null);
         parent.setVisible(true);
-		
-		//Fill character text area with character list
-		for(int i =0 ; i < characterList.size(); i++) {
-			characterTextArea.append(characterList.get(i).getName() + "\n");
-		}
-				
-		parent.setLocationRelativeTo(null);
-        parent.setVisible(true);
+        parent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         showButton.addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -118,17 +132,26 @@ public class CharacterSelection {
                 HpTextArea.setText(Integer.toString(characterList.get(list.getSelectedIndex()).getHP()));
                 AtkTextArea.setText(Integer.toString(characterList.get(list.getSelectedIndex()).getATK()));
                 DefTextArea.setText(Integer.toString(characterList.get(list.getSelectedIndex()).getDEF()));
+                SpdTextArea.setText(Integer.toString(characterList.get(list.getSelectedIndex()).getSPD()));
             }
         });
         
         selectButton.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                HpTextArea.setText(Integer.toString(characterList.get(list.getSelectedIndex()).getHP()));
-                AtkTextArea.setText(Integer.toString(characterList.get(list.getSelectedIndex()).getATK()));
-                DefTextArea.setText(Integer.toString(characterList.get(list.getSelectedIndex()).getDEF()));
+            	callMoveSetSelector(characterList.get(list.getSelectedIndex()));
+            	parent.dispose();
             }
-        });
+        }); 
+        
+        first = false;
+	}
+	
+	public void callMoveSetSelector(classCharacter ch) {
+		MoveSetSelection mss = new MoveSetSelection(this);
+        //parent.setVisible(false);
+    	mss.selectMoveSet(ch);
+        
 	}
 	
 	public void setupCharacters() {
@@ -136,7 +159,7 @@ public class CharacterSelection {
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
 		    for (Path file: stream) {
 		    	Scanner scanner = new Scanner(new File(file.toString()));
-		        String[] content = new String[4];
+		        String[] content = new String[5];
 		        int index = 0;
 		        while(scanner.hasNextLine()) {
 		        	content[index] = scanner.nextLine();
@@ -146,7 +169,8 @@ public class CharacterSelection {
 		        int Hp = Integer.parseInt(content[1].split(":")[1]);
 		        int Atk = Integer.parseInt(content[2].split(":")[1]);
 		        int Def = Integer.parseInt(content[3].split(":")[1]);
-		        characterList.add(new classCharacter(name, Hp, Atk, Def));
+		        int Spd = Integer.parseInt(content[4].split(":")[1]);
+		        characterList.add(new classCharacter(name, Hp, Atk, Def, Spd));
 		    }
 		} catch (IOException | DirectoryIteratorException x) {
 		    // IOException can never be thrown by the iteration.
