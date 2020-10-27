@@ -33,12 +33,14 @@ public class CharacterSelection {
 	public ArrayList<classCharacter> characterList = new ArrayList<>();
 	public ArrayList<FullCharacter> partyList = new ArrayList<>();
 	public ArrayList<String> nameOfMembersInParty = new ArrayList<>();
+	public MoveSetSelection mss;
 	public JList party;
-	public JList list;
+	public JList nameList;
+	public JButton editButton;
 	public boolean first = true;
 	public String[] names;
 	
-	public void characterSelect() {
+	public void characterSelect() { //Clean up and but GUI parts in seperate method
 		if(first) {
 			setupCharacters();
 		}
@@ -49,6 +51,7 @@ public class CharacterSelection {
 		//Buttons
 		JButton selectButton = new JButton("Select Moves");
 		JButton showButton = new JButton("Show Stats");
+		editButton = new JButton("Edit Character");
 		
 		//Labels
 		JLabel characterLabel = new JLabel("Characters");
@@ -58,19 +61,22 @@ public class CharacterSelection {
 		JLabel DefLabel = new JLabel("DEF");
 		JLabel SpdLabel = new JLabel("SPD");
 		
-		//Fill list with character names
+		//Fill list with character names (Move to setup characters later)
 		if(first) {
 			names = new String[characterList.size()];
 			for(int j = 0; j < characterList.size(); j++) {
 				names[j] = characterList.get(j).getName();
 			}			
 		}		
-		list = new JList(names);
-		list.setSelectedIndex(0);
+		nameList = new JList(names);
+		nameList.setSelectedIndex(0);
 		party = new JList(nameOfMembersInParty.toArray());
+		if(nameOfMembersInParty.size()>0) {
+			party.setSelectedIndex(0);
+		}
 		
 		//Scroll, List and Text areas
-		JScrollPane scrollPane = new JScrollPane(list);
+		JScrollPane scrollPane = new JScrollPane(nameList);
 		JScrollPane partyPane = new JScrollPane(party);
 		JTextArea HpTextArea = new JTextArea();
 		JTextArea AtkTextArea = new JTextArea();
@@ -92,6 +98,7 @@ public class CharacterSelection {
 		parent.add(SpdTextArea);
 		parent.add(showButton);
 		parent.add(selectButton);
+		parent.add(editButton);
 		
 		//Set Layout		
 		parent.setLayout(null);		
@@ -101,6 +108,7 @@ public class CharacterSelection {
 		partyPane.setPreferredSize(new Dimension(280,200));
 		selectButton.setPreferredSize(new Dimension(150,60));
 		showButton.setPreferredSize(new Dimension(150,60));
+		editButton.setPreferredSize(new Dimension(260,60));
 			
 		//Set size and position?
 		Insets insets = parent.getInsets();
@@ -119,9 +127,10 @@ public class CharacterSelection {
 		SpdTextArea.setBounds(370 + insets.left, 455 + insets.top, 150, 30);	
 		showButton.setBounds(370 + insets.left, 60 + insets.top, showButton.getPreferredSize().width, showButton.getPreferredSize().height);
 		selectButton.setBounds(10 + insets.left, 525 + insets.top, selectButton.getPreferredSize().width, selectButton.getPreferredSize().height);
+		editButton.setBounds(320 + insets.left, 680 + insets.top, editButton.getPreferredSize().width, editButton.getPreferredSize().height);
 		
 		//Other
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
+		nameList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		parent.setLocationRelativeTo(null);
         parent.setVisible(true);
         parent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -129,26 +138,36 @@ public class CharacterSelection {
         showButton.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                HpTextArea.setText(Integer.toString(characterList.get(list.getSelectedIndex()).getHP()));
-                AtkTextArea.setText(Integer.toString(characterList.get(list.getSelectedIndex()).getATK()));
-                DefTextArea.setText(Integer.toString(characterList.get(list.getSelectedIndex()).getDEF()));
-                SpdTextArea.setText(Integer.toString(characterList.get(list.getSelectedIndex()).getSPD()));
+                HpTextArea.setText(Integer.toString(characterList.get(nameList.getSelectedIndex()).getHP()));
+                AtkTextArea.setText(Integer.toString(characterList.get(nameList.getSelectedIndex()).getATK()));
+                DefTextArea.setText(Integer.toString(characterList.get(nameList.getSelectedIndex()).getDEF()));
+                SpdTextArea.setText(Integer.toString(characterList.get(nameList.getSelectedIndex()).getSPD()));
             }
         });
         
         selectButton.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	callMoveSetSelector(characterList.get(list.getSelectedIndex()));
+            	callMoveSetSelector(characterList.get(nameList.getSelectedIndex()));
             	parent.dispose();
             }
         }); 
+        
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	mss.editMoveSet(partyList.get(party.getSelectedIndex()));
+            	partyList.remove(party.getSelectedIndex());
+                nameOfMembersInParty.remove(party.getSelectedIndex());
+            	parent.dispose();
+            }
+        });
         
         first = false;
 	}
 	
 	public void callMoveSetSelector(classCharacter ch) {
-		MoveSetSelection mss = new MoveSetSelection(this);
+		mss = new MoveSetSelection(this);
         //parent.setVisible(false);
     	mss.selectMoveSet(ch);
         
